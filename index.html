@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+
+    <canvas id="visual" width="1200" height="600" style="border: 1px solid #000;margin:0px auto;background-color: rgb(110, 23, 8);"></canvas>
+    <audio id="audioBox" src="Justin Bieber - Intentions (Official Video (Short Version)) ft. Quavo (128 kbps).mp3"></audio>
+    <button onclick="Play()">
+        sfdfsg
+    </button>
+</body>
+
+<script defer>
+    const canvas = document.querySelector("#visual");
+    let ctx = canvas.getContext("2d");
+
+    let width = canvas.width;
+    let height = canvas.height;
+    let area = width*height;
+    const blockWidth = 25;
+    const blockHeight = 10;
+    const blockArea = blockHeight*blockWidth;
+    let totalBlocks = area/blockArea;
+    let verticalChunk = height/blockHeight;
+    let horizontalChunk = width/blockWidth;
+
+    let barData = {
+                Index: [],
+                height:[]
+            }
+
+    let res,source,times, audioCnotext, analyser, fbc_array, bars, bar_x, bar_width, bar_height;
+
+    function DrawLine(index,MaxHeight)
+    {
+    //    console.log(`height :${height} width: ${width}`);
+      //  console.log(`hChunk :${horizontalChunk} vChunk: ${verticalChunk}`);
+        let i;
+        let vIndex = 0;
+        let hIndex = index
+        let divider = totalBlocks/verticalChunk;
+        let section = 0;
+        let remaing;
+       for(i=0;i<=verticalChunk;i++)
+       {    
+            fill(index*blockWidth,vIndex,blockWidth,MaxHeight,index);
+
+            hIndex=blockWidth*section;
+            vIndex+=blockHeight;
+        }
+    }
+
+    function fill(horizontalindex,verticalIndex,blockWidth,blockHeight,index)
+    {
+        /*fill the block*/
+        const colorPool = [
+            '#000000','#110000','#220000','#330000','#440000','#550000','#660000','#770000','#880000','#990000','#aa0000','#bb0000','#cc0000','#dd0000','#ee0000','#ff0000','#ff1100','#ff2200','#ff3300','#ff4400','#ff5500','#ff6600','#ff7700','#ff8800','#ff9900','#ffaa00','#ffbb00','#ffcc00','#ffdd00','#ffee00','#ffff00','#ffff11','#ffff22','#ffff33','#ffff44','#ffff55','#ffff66','#fff77','#fff88','#ffff99','#ffffaa','#ffffbb','#ffffcc','#ffffdd','#ffffee','#ffffff','#eeeeee','#eeeedd'
+        ]
+        ctx.fillStyle = colorPool[index]//folorstr();
+        ctx.fillRect(horizontalindex,canvas.height,blockWidth,blockHeight);
+        ctx.lineCap = "round";
+        function getRandomInt(max) {
+        return Math.floor(Math.random() * Math.floor(max));
+        }
+        function c()
+        {
+
+            let col = ['0','1','2','3','4','5','6','7','8','9','10','a','b','c','d','e','f'];
+            let val = getRandomInt(16);
+            return col[val];
+        }
+        function folorstr()
+        {
+
+            return `#${c()}${c()}${c()}${'0'}${'0'}${'0'}`;
+        }
+    }
+
+    window.addEventListener("DOMContentLoaded",(t)=>{
+        for(let i=0;i<24;i++)
+        {
+            // DrawLine(i);
+        }
+        
+    })
+
+
+ 
+    function Play()
+    {
+        audioCnotext = new AudioContext();
+        analyser = audioCnotext.createAnalyser();
+        const audio = document.querySelector("#audioBox");
+        audio.controls = true;
+        audio.loop = true;
+        audio.autoplay = true;
+        let source = audioCnotext.createMediaElementSource(audio);
+        
+        let fbc_array = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(fbc_array);
+        
+            setTimeout(()=>{
+                times = 6
+            },5000)
+        
+        source.connect(analyser);
+        analyser.connect(audioCnotext.destination);
+        frameLooper();
+    }
+    function frameLooper()
+    {
+        window.requestAnimationFrame(frameLooper);
+        fbc_array = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(fbc_array);
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+        bars =48;
+        for(let i=0;i<bars;i++)
+        {
+            bar_x = i *50;
+            bar_width = 50;
+            bar_height = -(fbc_array[i]*2.4);
+            DrawLine(i,bar_height);
+     
+            if(times >= 5 && times < 8)// if 15 sec past stamp th audio data
+            {
+                barData.Index.push(i)
+                barData.height.push(bar_height)
+                if(i==23)
+                {
+                    console.log(barData)
+                    times++;
+                }
+                
+            }
+            
+        }
+
+        
+    }
+</script>
+</html>
