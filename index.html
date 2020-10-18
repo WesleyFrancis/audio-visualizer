@@ -6,7 +6,9 @@
     <title>Document</title>
 </head>
 <body>
-
+    <h2 style="font-family: Georgia, 'Times New Roman', Times, serif;">
+        Audio Visualizer 
+    </h2>
     <canvas id="visual" width="1200" height="600" style="border: 1px solid #000;margin:0px auto;background-color: rgb(110, 23, 8);"></canvas>
     <audio id="audioBox" src="Justin Bieber - Intentions (Official Video (Short Version)) ft. Quavo (128 kbps).mp3"></audio>
     <button onclick="Play()">
@@ -124,7 +126,7 @@
             bar_width = 50;
             bar_height = -(fbc_array[i]*2.4);
             DrawLine(i,bar_height);
-     
+
             if(times >= 5 && times < 8)// if 15 sec past stamp th audio data
             {
                 barData.Index.push(i)
